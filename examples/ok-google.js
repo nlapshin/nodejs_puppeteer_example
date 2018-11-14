@@ -13,19 +13,8 @@ const colors = require('colors');
     ]);
     const answer = answers.answer;
 
-    let browserOpts = {
-      timeout: 3000000
-    };
-
-    if (args.show === true) {
-      browserOpts.headless = false;
-    }
-
-    if (args.slowMo) {
-      browserOpts.slowMo = parseInt(args.slowMo);
-    }
-
-    const browser = await puppeteer.launch();
+    const browserOpts = getBrowserOpts(args);
+    const browser = await puppeteer.launch(browserOpts);
 
     log('Browser started!');
 
@@ -59,10 +48,18 @@ const colors = require('colors');
     throw err;
   }
 
-  function log(message) {
-    this.step = this.step ? this.step + 1 : 1;
+  function getBrowserOpts(args) {
+    let browserOpts = {};
 
-    console.log(`${this.step}. ${message}`.yellow);
+    if (args.show === true) {
+      browserOpts.headless = false;
+    }
+
+    if (args.slowMo) {
+      browserOpts.slowMo = parseInt(args.slowMo);
+    };
+
+    return browserOpts;
   }
 
   function searchResultEvaluate() {
@@ -94,5 +91,10 @@ const colors = require('colors');
     console.log(table.toString());
   }
 
+  function log(message) {
+    this.step = this.step ? this.step + 1 : 1;
+
+    console.log(`${this.step}. ${message}`.yellow);
+  }
 })();
 
