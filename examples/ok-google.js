@@ -21,17 +21,17 @@ const colors = require('colors');
     const page = await browser.newPage();
 
     await page.goto('https://google.ru');
-    await page.waitFor('#lst-ib');
+    await page.waitFor('.gLFyf');
 
     log('Google page opened!');
 
-    await page.type('#lst-ib', answer);
+    await page.type('.gLFyf', answer);
     await page.waitFor(2000);
-    
+
     log('Search query entered!');
 
     await page.click('input[name=btnK]');
-    await page.waitForNavigation();
+    await page.waitFor(2000);
 
     log('Search request ended!');
 
@@ -44,12 +44,14 @@ const colors = require('colors');
     log('Browser closed!');
 
     showResult(result);
-  } catch(err) {
+  } catch (err) {
     throw err;
   }
 
   function getBrowserOpts(args) {
-    let browserOpts = {};
+    let browserOpts = {
+      executablePath: '/usr/bin/google-chrome'
+    };
 
     if (args.show === true) {
       browserOpts.headless = false;
@@ -77,13 +79,13 @@ const colors = require('colors');
   }
 
   function showResult(result) {
-    var table = new Table({ 
+    var table = new Table({
       head: ["Title", "Link"]
     });
 
     result.forEach(row => {
-      table.push([ 
-        row.link, 
+      table.push([
+        row.link,
         row.title
       ]);
     });
